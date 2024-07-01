@@ -23,4 +23,9 @@ class CarrinhoController extends GetxController {
       total.value += item.preco;
     }
   }
+
+  void clearCart() {
+    
+    total.value = 0.0;
+  }
 }
