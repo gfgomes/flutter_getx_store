@@ -2,13 +2,14 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../models/item.dart';
+import 'package:panucci_delivery/components/cartao/cartao_controller.dart';
+import '../../models/item.dart';
 
 class Cartao extends StatelessWidget {
   Cartao({Key? key, required this.item}) : super(key: key);
   final Item item;
 
-  var counter = 0.obs;
+  final CartaoController controller = Get.put(CartaoController());
 
   @override
   Widget build(BuildContext context) {
@@ -49,20 +50,18 @@ class Cartao extends StatelessWidget {
                       InkWell(
                         borderRadius: BorderRadius.circular(20),
                         onTap: () {
-                          if (counter > 0) {
-                            counter--;
-                          }
+                          controller.decrement();
                         },
                         child: const Icon(
                           Icons.remove_circle_outline,
                           size: 20,
                         ),
                       ),
-                      Obx(() => Text(counter.toString())),
+                      Obx(() => Text(controller.counter.toString())),
                       InkWell(
                         borderRadius: BorderRadius.circular(20),
                         onTap: () {
-                          counter++;
+                          controller.increment();
                         },
                         child: const Icon(
                           Icons.add_circle_outline,
