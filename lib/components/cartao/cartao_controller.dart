@@ -5,9 +5,5 @@ class CartaoController extends GetxController {
 
   void increment() => counter++;
 
-  void decrement() {
-    if (counter > 0) {
-      counter--;
-    }
-  }
+  void decrement() => counter--;
 }

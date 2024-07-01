@@ -3,13 +3,26 @@ import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:panucci_delivery/components/cartao/cartao_controller.dart';
+import 'package:panucci_delivery/utils/snackbars.dart';
 import '../../models/item.dart';
 
-class Cartao extends StatelessWidget {
+class Cartao extends StatefulWidget {
   Cartao({Key? key, required this.item}) : super(key: key);
   final Item item;
 
-  final CartaoController controller = Get.put(CartaoController());
+  @override
+  State<Cartao> createState() => _CartaoState();
+}
+
+class _CartaoState extends State<Cartao> {
+  late CartaoController controller;
+
+  @override
+  void initState() {
+    controller = Get.put(CartaoController(), tag: widget.item.nome);
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +36,7 @@ class Cartao extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Image(
-              image: AssetImage(item.uri),
+              image: AssetImage(widget.item.uri),
               width: double.infinity,
               height: 50,
               fit: BoxFit.cover,
@@ -36,13 +49,13 @@ class Cartao extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(bottom: 8.0),
                     child: Text(
-                      item.nome,
+                      widget.item.nome,
                       style: TextStyle(fontWeight: FontWeight.w600),
                     ),
                   ),
                   Padding(
                     padding: EdgeInsets.only(bottom: 8.0),
-                    child: Text("R\$ ${item.preco.toStringAsFixed(2)}"),
+                    child: Text("R\$ ${widget.item.preco.toStringAsFixed(2)}"),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -50,7 +63,10 @@ class Cartao extends StatelessWidget {
                       InkWell(
                         borderRadius: BorderRadius.circular(20),
                         onTap: () {
-                          controller.decrement();
+                          if (controller.counter > 0) {
+                            controller.decrement();
+                            AppSnackbars.getRemoveItem(widget.item);
+                          }
                         },
                         child: const Icon(
                           Icons.remove_circle_outline,
@@ -62,6 +78,7 @@ class Cartao extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20),
                         onTap: () {
                           controller.increment();
+                          AppSnackbars.getAddItem(widget.item);
                         },
                         child: const Icon(
                           Icons.add_circle_outline,
